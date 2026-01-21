@@ -31,8 +31,50 @@ variable "admin_username" {
 }
 
 variable "public_key" {
-  description = "A chave pública SSH para autenticação."
+  description = "A chave pública SSH para autenticação (Obrigatório para Linux)."
   type        = string
+  default     = null
+}
+
+variable "admin_password" {
+  description = "A senha do administrador (Obrigatório para Windows)."
+  type        = string
+  default     = null
+  sensitive   = true
+}
+
+variable "os_type" {
+  description = "O tipo de sistema operacional a ser provisionado. Valores aceitos: 'linux' ou 'windows'."
+  type        = string
+  default     = "linux"
+  validation {
+    condition     = contains(["linux", "windows"], var.os_type)
+    error_message = "A variável os_type deve ser 'linux' ou 'windows'."
+  }
+}
+
+variable "image_publisher" {
+  description = "O editor (publisher) da imagem da VM."
+  type        = string
+  default     = "Canonical"
+}
+
+variable "image_offer" {
+  description = "A oferta (offer) da imagem da VM."
+  type        = string
+  default     = "0001-com-ubuntu-server-jammy"
+}
+
+variable "image_sku" {
+  description = "O SKU da imagem da VM."
+  type        = string
+  default     = "22_04-lts"
+}
+
+variable "image_version" {
+  description = "A versão da imagem da VM."
+  type        = string
+  default     = "latest"
 }
 
 variable "enable_public_ip" {
