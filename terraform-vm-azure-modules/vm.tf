@@ -52,6 +52,7 @@ resource "azurerm_network_interface_security_group_association" "this" {
 }
 
 resource "azurerm_linux_virtual_machine" "this" {
+  count               = var.os_type == "linux" ? 1 : 0
   name                = var.vm_name
   resource_group_name = var.resource_group_name
   location            = var.location
@@ -72,10 +73,37 @@ resource "azurerm_linux_virtual_machine" "this" {
   }
 
   source_image_reference {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts"
-    version   = "latest"
+    publisher = var.image_publisher
+    offer     = var.image_offer
+    sku       = var.image_sku
+    version   = var.image_version
+  }
+
+  tags = var.tags
+}
+
+resource "azurerm_windows_virtual_machine" "this" {
+  count               = var.os_type == "windows" ? 1 : 0
+  name                = var.vm_name
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  size                = var.vm_size
+  admin_username      = var.admin_username
+  admin_password      = var.admin_password
+  network_interface_ids = [
+    azurerm_network_interface.this.id,
+  ]
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
+    publisher = var.image_publisher
+    offer     = var.image_offer
+    sku       = var.image_sku
+    version   = var.image_version
   }
 
   tags = var.tags
@@ -84,7 +112,7 @@ resource "azurerm_linux_virtual_machine" "this" {
 resource "azurerm_virtual_machine_extension" "custom_script" {
   count                = var.enable_custom_script ? 1 : 0
   name                 = "${var.vm_name}-custom-script"
-  virtual_machine_id   = azurerm_linux_virtual_machine.this.id
+  virtual_machine_id   = var.os_type == "linux" ? azurerm_linux_virtual_machine.this[0].id : azurerm_windows_virtual_machine.this[0].id
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"
   type_handler_version = "2.1"

@@ -1,34 +1,14 @@
-# Repositório de Módulos Terraform
+# Módulo Terraform - Azure VM (Linux & Windows)
 
 <p align="center">
   <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Terraform_Logo.svg" alt="Terraform Logo" width="120">
   <br>
-  <em>Central de módulos, recursos e templates de Infraestrutura como Código (IaC) multi-cloud para AWS, Azure e GCP.</em>
+  <em>Módulo para provisionamento de Máquinas Virtuais (Linux e Windows) no Microsoft Azure.</em>
 </p>
 
 ## 🎯 Objetivo
 
-Este repositório tem como objetivo fornecer uma biblioteca de **módulos reutilizáveis** e exemplos de recursos Terraform para os principais provedores de nuvem. O foco é padronizar o provisionamento de infraestrutura seguindo as melhores práticas de cada cloud provider.
-
-## 🚀 Provedores Suportados
-
-As soluções abrangem os três principais provedores de nuvem pública:
-
-<p align="center">
-  <img src="https://jeffersoncastilho.com.br/wp-content/uploads/2026/01/aws-logo.png" alt="AWS Logo" height="60">
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://jeffersoncastilho.com.br/wp-content/uploads/2026/01/microsoft-azure-logo.png" alt="Microsoft Azure Logo" height="60">
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg" alt="Google Cloud Platform Logo" height="60">
-</p>
-
-## 📂 Estrutura do Repositório
-
-O conteúdo está organizado por provedor (Provider), facilitando a localização dos módulos específicos:
-
-*   **`/aws`**: Módulos e recursos para Amazon Web Services (EC2, S3, RDS, VPC, etc.).
-*   **`/azure`**: Módulos e recursos para Microsoft Azure (VMs, AKS, VNet, Storage Accounts, etc.).
-*   **`/gcp`**: Módulos e recursos para Google Cloud Platform (Compute Engine, GKE, Cloud Storage, etc.).
+Este módulo tem como objetivo facilitar a criação de Máquinas Virtuais no Azure, encapsulando a complexidade da configuração de recursos de rede (NIC, IP Público, NSG) e extensões, seguindo as melhores práticas.
 
 ## 🛠️ Como Usar
 
@@ -96,13 +76,14 @@ module "linux_vm" {
 
 ### 📋 Features do Módulo Azure VM
 
-O módulo disponibiliza as seguintes funcionalidades:
+O módulo disponibiliza as seguintes funcionalidades para **Linux** e **Windows**:
 
-*   **VM Linux (Ubuntu)**: Provisiona uma VM com Ubuntu 22.04 LTS.
+*   **Multi-OS**: Suporte a Linux e Windows via variável `os_type`.
+*   **Imagem Customizável**: Defina Publisher, Offer, SKU e Version da imagem.
 *   **Rede**: Cria automaticamente a interface de rede (NIC).
 *   **IP Público**: Opcional (`enable_public_ip`), cria um IP público dinâmico.
 *   **Security Group (NSG)**: Opcional, permite definir regras de entrada/saída dinamicamente via `nsg_rules`.
-*   **SSH Key**: Configuração de acesso via chave pública SSH.
+*   **Autenticação**: SSH Key (Linux) ou Senha (Windows).
 *   **Custom Script**: Opcional (`enable_custom_script`), permite executar scripts de inicialização na VM.
 *   **Tags**: Suporte completo a tags nos recursos criados.
 
