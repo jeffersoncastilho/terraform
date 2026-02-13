@@ -1,7 +1,7 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/hashicorp/terraform-website/master/content/img/logo-hashicorp.svg" alt="Terraform Logo" width="80"/>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Terraform_Logo.svg" alt="Terraform Logo" width="80"/>
   <span style="margin: 0 20px;">+</span>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/f/f1/Azure_Sky_Blue.svg" alt="Azure Logo" width="80"/>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg" alt="Azure Logo" width="80"/>
 
   # Azure Terraform Repository
 
