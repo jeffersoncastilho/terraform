@@ -21,19 +21,8 @@ The repository follows the **Standard Module Structure**:
 
 ```text
 .
-├── modules/                  # 📦 Reusable Terraform modules
-│   ├── azure-vnet/           #    ├── Example: Virtual Network module
-│   │   ├── main.tf           #    │   ├── Primary logic
-│   │   ├── variables.tf      #    │   ├── Input variables
-│   │   ├── outputs.tf        #    │   └── Output values
-│   │   └── README.md         #    └── Module documentation
-│   └── azure-storage/        #    └── Example: Storage Account module
-├── examples/                 # 🚀 Example implementations / Consumers
-│   ├── vnet-simple/          #    ├── Example using the azure-vnet module
-│   │   ├── main.tf
-│   │   ├── providers.tf      #    ├── Azure provider configuration
-│   │   └── outputs.tf
-│   └── ...
+├── terraform-resource-group-modules/  # 📦 Resource Group Module: Standardized RG provisioning
+├── terraform-vm-azure-modules/        # 📦 Virtual Machine Module: Linux & Windows VMs
 └── README.md
 ```
 
