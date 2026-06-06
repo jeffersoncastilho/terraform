@@ -22,3 +22,12 @@ terraform.rc
 # Sensitive vars
 *.tfvars
 !example.tfvars
+
+# Backend config gerado em runtime (contém nome do Storage Account)
+backend.hcl
+
+# Outputs gerados após terraform apply (contém valores reais de infra)
+outputs.json
+
+# Logs de deploy
+.deploy-logs/
