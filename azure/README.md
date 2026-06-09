@@ -62,6 +62,7 @@ O diretório [`artigos-dr/`](artigos-dr/) contém o código Terraform da série 
 
 | Artigo | Pasta | Link |
 |--------|-------|------|
+| Art. 01 — Planejamento de DR Azure e Landing Zone | *(sem código — artigo de arquitetura)* | [Ler artigo](https://jeffersoncastilho.com.br/2026/03/31/dr-azure-e-landing-zone/) |
 | Art. 02 — Hub-Spoke Landing Zone com Terraform | [`art-02-hub-spoke-terraform/`](artigos-dr/art-02-hub-spoke-terraform/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/06/05/hub-spoke-landing-zone/) |
 | Art. 03 — Azure Firewall e NSGs na Landing Zone | [`art-03-firewall-nsg/`](artigos-dr/art-03-firewall-nsg/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/06/06/azure-firewall-e-nsgs/) |
 | Art. 04 — Azure Bastion sem IP Público | [`art-04-bastion/`](artigos-dr/art-04-bastion/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/06/07/azure-bastion-sem-ip/) |
