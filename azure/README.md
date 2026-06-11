@@ -69,6 +69,7 @@ O diretório [`artigos-dr/`](artigos-dr/) contém o código Terraform da série 
 | Art. 05 — Azure Front Door e Traffic Manager para Failover | [`art-05-front-door-traffic-manager/`](artigos-dr/art-05-front-door-traffic-manager/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/06/08/azure-front-door-failover/) |
 | Art. 06 — DNS Privado Multi-Região no Azure | [`art-06-dns-privado/`](artigos-dr/art-06-dns-privado/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/06/09/dns-privado-multi-regiao/) |
 | Art. 07 — Azure Site Recovery para VMs Multi-Região | [`art-07-site-recovery/`](artigos-dr/art-07-site-recovery/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/06/10/azure-site-recovery-vms/) |
+| Art. 08 — Azure Storage com Geo-Replicação para DR | [`art-08-storage-replication/`](artigos-dr/art-08-storage-replication/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/06/11/storage-geo-replicacao-dr/) |
 
 ## Uso rápido
 
