@@ -70,6 +70,7 @@ O diretório [`artigos-dr/`](artigos-dr/) contém o código Terraform da série 
 | Art. 06 — DNS Privado Multi-Região no Azure | [`art-06-dns-privado/`](artigos-dr/art-06-dns-privado/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/06/09/dns-privado-multi-regiao/) |
 | Art. 07 — Azure Site Recovery para VMs Multi-Região | [`art-07-site-recovery/`](artigos-dr/art-07-site-recovery/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/06/10/azure-site-recovery-vms/) |
 | Art. 08 — Azure Storage com Geo-Replicação para DR | [`art-08-storage-replication/`](artigos-dr/art-08-storage-replication/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/06/11/storage-geo-replicacao-dr/) |
+| Art. 09 — AKS Multi-Região com Failover no Azure | [`art-09-aks-multi-regiao/`](artigos-dr/art-09-aks-multi-regiao/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/06/12/aks-multi-regiao-failover/) |
 
 ## Uso rápido
 
