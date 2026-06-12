@@ -1,0 +1,156 @@
+# Pipeline: Build + Deploy da aplicação dr-demo
+# Requer: Service Connection "sc-azure-blog-castilho" (Azure Resource Manager, Subscription scope)
+# Ajuste o path do trigger conforme a raiz do seu repositório Azure DevOps.
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - azure-dr/scripts/art-09-aks-multi-regiao/app-demo/**
+
+variables:
+  SERVICE_CONNECTION: sc-azure-blog-castilho
+  ACR: acrblogcastilho
+  IMAGE: dr-demo
+  APP_PATH: azure-dr/scripts/art-09-aks-multi-regiao/app-demo
+
+stages:
+
+  # ---------------------------------------------------------------
+  # Stage 1 — Build das duas imagens e push para o ACR
+  # Usa "az acr build" (build remoto no ACR, sem Docker no agente)
+  # ---------------------------------------------------------------
+  - stage: Build
+    displayName: Build e Push para ACR
+    jobs:
+      - job: BuildImagens
+        displayName: Build Brazil South + East US
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+
+          - task: AzureCLI@2
+            displayName: Build dr-demo:brazilsouth
+            inputs:
+              azureSubscription: $(SERVICE_CONNECTION)
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                az acr build \
+                  --registry $(ACR) \
+                  --image $(IMAGE):brazilsouth \
+                  --image $(IMAGE):brazilsouth-$(Build.BuildId) \
+                  --build-arg REGION="Brazil South" \
+                  --file $(APP_PATH)/Dockerfile \
+                  $(APP_PATH)
+
+          - task: AzureCLI@2
+            displayName: Build dr-demo:eastus
+            inputs:
+              azureSubscription: $(SERVICE_CONNECTION)
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                az acr build \
+                  --registry $(ACR) \
+                  --image $(IMAGE):eastus \
+                  --image $(IMAGE):eastus-$(Build.BuildId) \
+                  --build-arg REGION="East US" \
+                  --file $(APP_PATH)/Dockerfile \
+                  $(APP_PATH)
+
+  # ---------------------------------------------------------------
+  # Stage 2 — Deploy no AKS Brazil South  (paralelo com Stage 3)
+  # ---------------------------------------------------------------
+  - stage: DeployBrazilSouth
+    displayName: Deploy AKS Brazil South
+    dependsOn: Build
+    jobs:
+      - deployment: DeployBRS
+        displayName: Deploy AKS Brazil South
+        environment: producao-brazilsouth
+        pool:
+          vmImage: ubuntu-latest
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+
+                - checkout: self
+
+                - task: AzureCLI@2
+                  displayName: kubectl apply — Brazil South
+                  inputs:
+                    azureSubscription: $(SERVICE_CONNECTION)
+                    scriptType: bash
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      az aks get-credentials \
+                        --resource-group rg-blog-castilho-workload-brazilsouth \
+                        --name aks-blog-castilho-brazilsouth \
+                        --overwrite-existing \
+                        --admin
+
+                      MANIFESTS=$(Build.SourcesDirectory)/$(APP_PATH)/manifests
+
+                      kubectl apply -f $MANIFESTS/namespace.yaml
+                      kubectl apply -f $MANIFESTS/deployment-brazilsouth.yaml
+                      kubectl apply -f $MANIFESTS/service.yaml
+
+                      kubectl rollout status deployment/dr-demo \
+                        -n app-producao \
+                        --timeout=120s
+
+                      echo "=== IP externo ==="
+                      kubectl get svc dr-demo -n app-producao \
+                        -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+                      echo ""
+
+  # ---------------------------------------------------------------
+  # Stage 3 — Deploy no AKS East US  (paralelo com Stage 2)
+  # ---------------------------------------------------------------
+  - stage: DeployEastUS
+    displayName: Deploy AKS East US
+    dependsOn: Build
+    jobs:
+      - deployment: DeployEUS
+        displayName: Deploy AKS East US
+        environment: producao-eastus
+        pool:
+          vmImage: ubuntu-latest
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+
+                - checkout: self
+
+                - task: AzureCLI@2
+                  displayName: kubectl apply — East US
+                  inputs:
+                    azureSubscription: $(SERVICE_CONNECTION)
+                    scriptType: bash
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      az aks get-credentials \
+                        --resource-group rg-blog-castilho-workload-eastus \
+                        --name aks-blog-castilho-eastus \
+                        --overwrite-existing \
+                        --admin
+
+                      MANIFESTS=$(Build.SourcesDirectory)/$(APP_PATH)/manifests
+
+                      kubectl apply -f $MANIFESTS/namespace.yaml
+                      kubectl apply -f $MANIFESTS/deployment-eastus.yaml
+                      kubectl apply -f $MANIFESTS/service.yaml
+
+                      kubectl rollout status deployment/dr-demo \
+                        -n app-producao \
+                        --timeout=120s
+
+                      echo "=== IP externo ==="
+                      kubectl get svc dr-demo -n app-producao \
+                        -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+                      echo ""
