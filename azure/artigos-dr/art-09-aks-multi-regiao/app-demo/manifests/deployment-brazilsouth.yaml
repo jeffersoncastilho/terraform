@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dr-demo
+  namespace: app-producao
+  labels:
+    app: dr-demo
+    region: brazilsouth
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dr-demo
+  template:
+    metadata:
+      labels:
+        app: dr-demo
+        region: brazilsouth
+    spec:
+      containers:
+        - name: dr-demo
+          image: acrblogcastilho.azurecr.io/dr-demo:brazilsouth
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /health.html
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health.html
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
