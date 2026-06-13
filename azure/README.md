@@ -71,6 +71,7 @@ O diretório [`artigos-dr/`](artigos-dr/) contém o código Terraform da série 
 | Art. 07 — Azure Site Recovery para VMs Multi-Região | [`art-07-site-recovery/`](artigos-dr/art-07-site-recovery/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/06/10/azure-site-recovery-vms/) |
 | Art. 08 — Azure Storage com Geo-Replicação para DR | [`art-08-storage-replication/`](artigos-dr/art-08-storage-replication/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/06/11/storage-geo-replicacao-dr/) |
 | Art. 09 — AKS Multi-Região com Failover no Azure | [`art-09-aks-multi-regiao/`](artigos-dr/art-09-aks-multi-regiao/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/06/12/aks-multi-regiao-failover/) |
+| Art. 10 — Velero no AKS para Backup e Restore Cross-Region | [`art-10-velero-aks/`](artigos-dr/art-10-velero-aks/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/06/13/velero-aks-backup-restore/) |
 
 ## Uso rápido
 
