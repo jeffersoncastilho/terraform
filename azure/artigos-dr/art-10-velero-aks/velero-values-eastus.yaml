@@ -1,0 +1,38 @@
+initContainers:
+  - name: velero-plugin-for-azure
+    image: velero/velero-plugin-for-microsoft-azure:v1.10.0
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
+
+configuration:
+  backupStorageLocation:
+    - name: default
+      provider: azure
+      bucket: backups
+      config:
+        storageAccount: stblogcastilhobrazil
+        resourceGroup: rg-blog-castilho-workload-brazilsouth
+        storageAccountKeyEnvVar: AZURE_STORAGE_ACCOUNT_ACCESS_KEY
+
+  volumeSnapshotLocation:
+    - name: default
+      provider: azure
+      config:
+        resourceGroup: rg-blog-castilho-workload-eastus
+
+credentials:
+  useSecret: true
+  secretContents:
+    cloud: |
+      AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID}
+      AZURE_TENANT_ID=${AZURE_TENANT_ID}
+      AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
+      AZURE_RESOURCE_GROUP=rg-blog-castilho-workload-eastus
+      AZURE_CLOUD_NAME=AzurePublicCloud
+
+features: EnableCSI
+
+deployNodeAgent: true
