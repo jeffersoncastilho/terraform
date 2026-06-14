@@ -72,6 +72,7 @@ O diretório [`artigos-dr/`](artigos-dr/) contém o código Terraform da série 
 | Art. 08 — Azure Storage com Geo-Replicação para DR | [`art-08-storage-replication/`](artigos-dr/art-08-storage-replication/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/06/11/storage-geo-replicacao-dr/) |
 | Art. 09 — AKS Multi-Região com Failover no Azure | [`art-09-aks-multi-regiao/`](artigos-dr/art-09-aks-multi-regiao/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/06/12/aks-multi-regiao-failover/) |
 | Art. 10 — Velero no AKS para Backup e Restore Cross-Region | [`art-10-velero-aks/`](artigos-dr/art-10-velero-aks/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/06/13/velero-aks-backup-restore/) |
+| Art. 11 — Runbooks de Failover no Azure Automation | [`art-11-runbooks-failover/`](artigos-dr/art-11-runbooks-failover/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/06/14/runbooks-failover-azure/) |
 
 ## Uso rápido
 
