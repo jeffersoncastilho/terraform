@@ -20,7 +20,7 @@ Cada pasta corresponde a um artigo da série e usa os módulos reutilizáveis da
 | Art. 10 | `art-10-velero-aks/` | Velero no AKS para Backup e Restore Cross-Region |
 | Art. 11 | `art-11-runbooks-failover/` | Runbooks de Failover no Azure Automation |
 | Art. 12 | `art-12-simulando-dr/` | Simular um DR no Azure sem Impacto em Produção |
-| Art. 13 | `art-13-monitoramento/` | Monitoramento do DR no Azure com Azure Monitor |
+| [Art. 13](https://jeffersoncastilho.com.br/2026/06/16/monitoramento-dr-azure/) | `art-13-monitoramento/` | Monitoramento do DR no Azure com Azure Monitor |
 
 ## Pré-requisitos
 
