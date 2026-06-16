@@ -1,0 +1,77 @@
+{
+  "title": "Replication Health — blog-castilho",
+  "uid": "replication-health-blog-castilho",
+  "schemaVersion": 38,
+  "time": { "from": "now-24h", "to": "now" },
+  "refresh": "5m",
+  "panels": [
+    {
+      "id": 1,
+      "type": "gauge",
+      "title": "Storage — Lag Atual (segundos)",
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 0 },
+      "datasource": { "type": "grafana-azure-monitor-datasource" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Monitor",
+          "azureMonitor": {
+            "resourceGroup": "rg-blog-castilho-workload-brazilsouth",
+            "resourceType": "Microsoft.Storage/storageAccounts",
+            "resourceName": "stblogcastilhobrazil",
+            "metricName": "GeoReplicationLag",
+            "aggregation": "Average",
+            "timeGrain": "PT1M"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "min": 0,
+          "max": 600,
+          "thresholds": {
+            "steps": [
+              { "value": null, "color": "green" },
+              { "value": 120,  "color": "yellow" },
+              { "value": 300,  "color": "red" }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Storage — Lag P50 / P95 / Máximo (segundos)",
+      "gridPos": { "h": 8, "w": 18, "x": 6, "y": 0 },
+      "datasource": { "type": "grafana-azure-monitor-datasource" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Log Analytics",
+          "azureLogAnalytics": {
+            "query": "AzureMetrics\n| where MetricName == \"GeoReplicationLag\"\n| summarize P50 = percentile(Average, 50), P95 = percentile(Average, 95), Max = max(Average) by bin(TimeGenerated, 1h)"
+          }
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "s" } }
+    },
+    {
+      "id": 3,
+      "type": "table",
+      "title": "ASR — RPO por VM (últimas 24h)",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 8 },
+      "datasource": { "type": "grafana-azure-monitor-datasource" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Log Analytics",
+          "azureLogAnalytics": {
+            "query": "AzureDiagnostics\n| where Category == \"AzureSiteRecoveryReplicationStats\"\n| project TimeGenerated, Resource, RPO_s = RecoveryPointObjectiveInSeconds, Status = ReplicationHealthStatus_s\n| order by TimeGenerated desc\n| take 50"
+          }
+        }
+      ]
+    }
+  ]
+}
