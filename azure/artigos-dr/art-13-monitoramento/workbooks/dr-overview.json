@@ -1,0 +1,69 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "# DR Overview — blog-castilho\n\nVisão geral do ambiente de Disaster Recovery multi-região."
+      }
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "timeRange",
+            "version": "KqlParameterItem/1.0",
+            "name": "TimeRange",
+            "type": 4,
+            "value": { "durationMs": 86400000 },
+            "label": "Período"
+          }
+        ]
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AzureDiagnostics\n| where Category == \"AzureSiteRecoveryReplicationStats\"\n| where TimeGenerated {TimeRange}\n| summarize arg_max(TimeGenerated, *) by Resource\n| project Resource, ReplicationHealthStatus_s, RecoveryPointObjectiveInSeconds",
+        "size": 0,
+        "title": "ASR — Saúde da Replicação",
+        "queryType": 0
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AzureMetrics\n| where MetricName == \"GeoReplicationLag\"\n| where TimeGenerated {TimeRange}\n| summarize avg(Average) by bin(TimeGenerated, 5m)\n| project TimeGenerated, LagSeconds = avg_Average",
+        "size": 0,
+        "title": "Storage — Lag de Geo-Replicação (segundos)",
+        "queryType": 0,
+        "visualization": "timechart"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "KubeNodeInventory\n| where TimeGenerated {TimeRange}\n| summarize arg_max(TimeGenerated, *) by Computer\n| project Computer, Status, ClusterName",
+        "size": 0,
+        "title": "AKS — Estado dos Nodes",
+        "queryType": 0
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AzureDiagnostics\n| where Category == \"AzureFirewallNetworkRule\"\n| where TimeGenerated {TimeRange}\n| summarize count() by bin(TimeGenerated, 1h), Action_s\n| project TimeGenerated, Action_s, count_",
+        "size": 0,
+        "title": "Azure Firewall — Tráfego por Hora",
+        "queryType": 0,
+        "visualization": "barchart"
+      }
+    }
+  ]
+}

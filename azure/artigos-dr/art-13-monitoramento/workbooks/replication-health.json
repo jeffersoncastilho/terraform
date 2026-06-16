@@ -1,0 +1,60 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "# Replication Health — blog-castilho\n\nMonitoramento detalhado da saúde da replicação ASR e Storage geo-replication."
+      }
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "timeRange",
+            "version": "KqlParameterItem/1.0",
+            "name": "TimeRange",
+            "type": 4,
+            "value": { "durationMs": 86400000 },
+            "label": "Período"
+          }
+        ]
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AzureDiagnostics\n| where Category == \"AzureSiteRecoveryReplicationStats\"\n| where TimeGenerated {TimeRange}\n| project TimeGenerated, Resource, RPO = RecoveryPointObjectiveInSeconds, Status = ReplicationHealthStatus_s\n| order by TimeGenerated desc",
+        "size": 0,
+        "title": "ASR — RPO por VM (últimas 24h)",
+        "queryType": 0,
+        "visualization": "table"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AzureDiagnostics\n| where Category == \"AzureSiteRecoveryReplicationStats\"\n| where TimeGenerated {TimeRange}\n| summarize MaxRPO = max(RecoveryPointObjectiveInSeconds) by bin(TimeGenerated, 15m)\n| project TimeGenerated, MaxRPO_min = MaxRPO / 60",
+        "size": 0,
+        "title": "ASR — RPO Máximo ao Longo do Tempo (minutos)",
+        "queryType": 0,
+        "visualization": "timechart"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AzureMetrics\n| where MetricName == \"GeoReplicationLag\"\n| where TimeGenerated {TimeRange}\n| summarize P50 = percentile(Average, 50), P95 = percentile(Average, 95), Max = max(Average) by bin(TimeGenerated, 1h)\n| project TimeGenerated, P50_s = P50, P95_s = P95, Max_s = Max",
+        "size": 0,
+        "title": "Storage — Lag de Replicação P50 / P95 / Max (segundos)",
+        "queryType": 0,
+        "visualization": "timechart"
+      }
+    }
+  ]
+}

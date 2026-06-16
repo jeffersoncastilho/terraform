@@ -1,0 +1,130 @@
+{
+  "title": "DR Overview — blog-castilho",
+  "uid": "dr-overview-blog-castilho",
+  "schemaVersion": 38,
+  "time": { "from": "now-24h", "to": "now" },
+  "refresh": "5m",
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "ASR — Status de Replicação",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "datasource": { "type": "grafana-azure-monitor-datasource" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Log Analytics",
+          "azureLogAnalytics": {
+            "query": "AzureDiagnostics\n| where Category == \"AzureSiteRecoveryReplicationStats\"\n| summarize arg_max(TimeGenerated, *) by Resource\n| summarize\n    Healthy   = countif(ReplicationHealthStatus_s == \"Normal\"),\n    Unhealthy = countif(ReplicationHealthStatus_s != \"Normal\")"
+          }
+        }
+      ],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              { "value": null, "color": "green" },
+              { "value": 1,    "color": "red" }
+            ]
+          },
+          "mappings": []
+        }
+      }
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "ASR — RPO Máximo (minutos)",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "datasource": { "type": "grafana-azure-monitor-datasource" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Log Analytics",
+          "azureLogAnalytics": {
+            "query": "AzureDiagnostics\n| where Category == \"AzureSiteRecoveryReplicationStats\"\n| summarize MaxRPO = max(RecoveryPointObjectiveInSeconds) by bin(TimeGenerated, 15m)\n| project TimeGenerated, MaxRPO_min = MaxRPO / 60"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "m",
+          "thresholds": {
+            "steps": [
+              { "value": null, "color": "green" },
+              { "value": 5,    "color": "yellow" },
+              { "value": 15,   "color": "red" }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "Storage — Lag de Geo-Replicação (segundos)",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+      "datasource": { "type": "grafana-azure-monitor-datasource" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Monitor",
+          "azureMonitor": {
+            "resourceGroup": "rg-blog-castilho-workload-brazilsouth",
+            "resourceType": "Microsoft.Storage/storageAccounts",
+            "resourceName": "stblogcastilhobrazil",
+            "metricName": "GeoReplicationLag",
+            "aggregation": "Average",
+            "timeGrain": "PT5M"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "thresholds": {
+            "steps": [
+              { "value": null, "color": "green" },
+              { "value": 120,  "color": "yellow" },
+              { "value": 300,  "color": "red" }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 4,
+      "type": "table",
+      "title": "AKS — Estado dos Nodes",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+      "datasource": { "type": "grafana-azure-monitor-datasource" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Log Analytics",
+          "azureLogAnalytics": {
+            "query": "KubeNodeInventory\n| summarize arg_max(TimeGenerated, *) by Computer\n| project Computer, Status, ClusterName\n| order by ClusterName asc"
+          }
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "barchart",
+      "title": "Azure Firewall — Ações por Hora",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
+      "datasource": { "type": "grafana-azure-monitor-datasource" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Log Analytics",
+          "azureLogAnalytics": {
+            "query": "AzureDiagnostics\n| where Category == \"AzureFirewallNetworkRule\"\n| summarize count() by bin(TimeGenerated, 1h), Action_s\n| project TimeGenerated, Action_s, count_"
+          }
+        }
+      ]
+    }
+  ]
+}
