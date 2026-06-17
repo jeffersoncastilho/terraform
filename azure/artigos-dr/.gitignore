@@ -1,0 +1,9 @@
+# Terraform — nunca commitar estes arquivos
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+*.tfvars
+backend.hcl
+outputs.json
+crash.log
