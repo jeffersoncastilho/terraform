@@ -33,3 +33,4 @@ outputs.json
 # Logs de deploy
 *.log
 .deploy-logs/
+
