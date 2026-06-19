@@ -24,7 +24,9 @@ terraform.rc
 
 # Arquivos gerados em runtime com dados de infra real
 backend.hcl
+backend.conf
 outputs.json
+outputs.tf.json
 
 # Credenciais e env local
 .env
