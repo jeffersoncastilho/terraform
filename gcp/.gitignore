@@ -1,0 +1,47 @@
+# Local .terraform directories
+**/.terraform/*
+
+# Terraform lock file
+.terraform.lock.hcl
+**/.terraform.lock.hcl
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# CLI configuration files
+.terraformrc
+terraform.rc
+
+# Sensitive vars
+*.tfvars
+!example.tfvars
+
+# Backend config (contém bucket GCS do state — nunca commitar)
+backend.hcl
+backend.conf
+
+# Outputs gerados após terraform apply (contém valores reais de infra)
+outputs.json
+outputs.tf.json
+
+# Credenciais e env local
+.env
+*.env
+*-credentials.json
+application_default_credentials.json
+
+# Logs de deploy
+*.log
+.deploy-logs/
+
+# OS generated files
+.DS_Store
+Thumbs.db

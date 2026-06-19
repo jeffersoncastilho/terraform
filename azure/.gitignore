@@ -29,9 +29,11 @@ terraform.rc
 
 # Backend config gerado em runtime (contém nome do Storage Account)
 backend.hcl
+backend.conf
 
 # Outputs gerados após terraform apply (contém valores reais de infra)
 outputs.json
+outputs.tf.json
 
 # Logs de deploy
 .deploy-logs/

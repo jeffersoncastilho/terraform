@@ -1,0 +1,17 @@
+# MCP server local — não publicar
+mcp-server/
+
+# Terraform state e configurações sensíveis (cobertura raiz)
+*.tfstate
+*.tfstate.*
+*.tfvars
+backend.hcl
+backend.conf
+.terraform/
+**/.terraform/*
+.terraform.lock.hcl
+**/.terraform.lock.hcl
+outputs.json
+outputs.tf.json
+.env
+*.env
