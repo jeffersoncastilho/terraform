@@ -1,6 +1,10 @@
 # Local .terraform directories
 **/.terraform/*
 
+# Terraform lock file
+.terraform.lock.hcl
+**/.terraform.lock.hcl
+
 # .tfstate files
 *.tfstate
 *.tfstate.*
@@ -19,6 +23,22 @@ terraform.rc
 # Sensitive vars
 *.tfvars
 !example.tfvars
+
+# Backend config (contém bucket/key do state — nunca commitar)
+backend.hcl
+backend.conf
+
+# Outputs gerados após terraform apply (contém valores reais de infra)
+outputs.json
+outputs.tf.json
+
+# Credenciais e env local
+.env
+*.env
+
+# Logs de deploy
+*.log
+.deploy-logs/
 
 # Python
 __pycache__/
