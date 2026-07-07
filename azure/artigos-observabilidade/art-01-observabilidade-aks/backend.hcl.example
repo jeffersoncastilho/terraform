@@ -1,0 +1,4 @@
+resource_group_name  = "rg-blog-castilho-tfstate"
+storage_account_name = "stbcastilhostatevapv0l"
+container_name       = "tfstate"
+key                  = "art-01-observabilidade-aks.tfstate"
