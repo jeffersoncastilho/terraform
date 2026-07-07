@@ -1,0 +1,14 @@
+# Terraform state e planos (state local neste lab)
+*.tfstate
+*.tfstate.*
+tf.plan
+*.tfplan
+
+# Diretório e lock do provider
+.terraform/
+.terraform.lock.hcl
+
+# Backend e variáveis sensíveis
+backend.hcl
+backend.conf
+*.tfvars
