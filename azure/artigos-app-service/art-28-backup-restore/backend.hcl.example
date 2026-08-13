@@ -1,0 +1,4 @@
+resource_group_name  = "SEU-RESOURCE-GROUP"
+storage_account_name = "SUA-STORAGE-ACCOUNT"
+container_name       = "tfstate"
+key                  = "art-28-backup-restore.tfstate"

@@ -157,9 +157,9 @@ module "nsg_frontend_brazilsouth" {
   location            = data.azurerm_resource_group.network_brazilsouth.location
   subnet_id           = data.azurerm_subnet.frontend_brs.id
   security_rules = [
-    { name = "allow-https-inbound", priority = 100,  direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "443", source_address_prefix = "Internet",  destination_address_prefix = "VirtualNetwork" },
-    { name = "allow-http-inbound",  priority = 110,  direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "80",  source_address_prefix = "Internet",  destination_address_prefix = "VirtualNetwork" },
-    { name = "deny-all-inbound",    priority = 4096, direction = "Inbound", access = "Deny",  protocol = "*",   source_port_range = "*", destination_port_range = "*",   source_address_prefix = "*",         destination_address_prefix = "*" },
+    { name = "allow-https-inbound", priority = 100, direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "443", source_address_prefix = "Internet", destination_address_prefix = "VirtualNetwork" },
+    { name = "allow-http-inbound", priority = 110, direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "80", source_address_prefix = "Internet", destination_address_prefix = "VirtualNetwork" },
+    { name = "deny-all-inbound", priority = 4096, direction = "Inbound", access = "Deny", protocol = "*", source_port_range = "*", destination_port_range = "*", source_address_prefix = "*", destination_address_prefix = "*" },
   ]
   tags = var.tags
 }
@@ -173,9 +173,9 @@ module "nsg_frontend_eastus" {
   location            = data.azurerm_resource_group.network_eastus.location
   subnet_id           = data.azurerm_subnet.frontend_eus.id
   security_rules = [
-    { name = "allow-https-inbound", priority = 100,  direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "443", source_address_prefix = "Internet",  destination_address_prefix = "VirtualNetwork" },
-    { name = "allow-http-inbound",  priority = 110,  direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "80",  source_address_prefix = "Internet",  destination_address_prefix = "VirtualNetwork" },
-    { name = "deny-all-inbound",    priority = 4096, direction = "Inbound", access = "Deny",  protocol = "*",   source_port_range = "*", destination_port_range = "*",   source_address_prefix = "*",         destination_address_prefix = "*" },
+    { name = "allow-https-inbound", priority = 100, direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "443", source_address_prefix = "Internet", destination_address_prefix = "VirtualNetwork" },
+    { name = "allow-http-inbound", priority = 110, direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "80", source_address_prefix = "Internet", destination_address_prefix = "VirtualNetwork" },
+    { name = "deny-all-inbound", priority = 4096, direction = "Inbound", access = "Deny", protocol = "*", source_port_range = "*", destination_port_range = "*", source_address_prefix = "*", destination_address_prefix = "*" },
   ]
   tags = var.tags
 }
@@ -189,8 +189,8 @@ module "nsg_backend_brazilsouth" {
   location            = data.azurerm_resource_group.network_brazilsouth.location
   subnet_id           = data.azurerm_subnet.backend_brs.id
   security_rules = [
-    { name = "allow-frontend-inbound",  priority = 100, direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "8080", source_address_prefix = "10.2.1.0/24", destination_address_prefix = "VirtualNetwork" },
-    { name = "deny-internet-inbound",   priority = 200, direction = "Inbound", access = "Deny",  protocol = "*",   source_port_range = "*", destination_port_range = "*",    source_address_prefix = "Internet",    destination_address_prefix = "*" },
+    { name = "allow-frontend-inbound", priority = 100, direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "8080", source_address_prefix = "10.2.1.0/24", destination_address_prefix = "VirtualNetwork" },
+    { name = "deny-internet-inbound", priority = 200, direction = "Inbound", access = "Deny", protocol = "*", source_port_range = "*", destination_port_range = "*", source_address_prefix = "Internet", destination_address_prefix = "*" },
   ]
   tags = var.tags
 }
@@ -204,8 +204,8 @@ module "nsg_backend_eastus" {
   location            = data.azurerm_resource_group.network_eastus.location
   subnet_id           = data.azurerm_subnet.backend_eus.id
   security_rules = [
-    { name = "allow-frontend-inbound",  priority = 100, direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "8080", source_address_prefix = "10.3.1.0/24", destination_address_prefix = "VirtualNetwork" },
-    { name = "deny-internet-inbound",   priority = 200, direction = "Inbound", access = "Deny",  protocol = "*",   source_port_range = "*", destination_port_range = "*",    source_address_prefix = "Internet",    destination_address_prefix = "*" },
+    { name = "allow-frontend-inbound", priority = 100, direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "8080", source_address_prefix = "10.3.1.0/24", destination_address_prefix = "VirtualNetwork" },
+    { name = "deny-internet-inbound", priority = 200, direction = "Inbound", access = "Deny", protocol = "*", source_port_range = "*", destination_port_range = "*", source_address_prefix = "Internet", destination_address_prefix = "*" },
   ]
   tags = var.tags
 }
@@ -219,8 +219,8 @@ module "nsg_data_brazilsouth" {
   location            = data.azurerm_resource_group.network_brazilsouth.location
   subnet_id           = data.azurerm_subnet.data_brs.id
   security_rules = [
-    { name = "allow-backend-sql", priority = 100,  direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "1433", source_address_prefix = "10.2.2.0/24", destination_address_prefix = "VirtualNetwork" },
-    { name = "deny-all-inbound",  priority = 4096, direction = "Inbound", access = "Deny",  protocol = "*",   source_port_range = "*", destination_port_range = "*",    source_address_prefix = "*",           destination_address_prefix = "*" },
+    { name = "allow-backend-sql", priority = 100, direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "1433", source_address_prefix = "10.2.2.0/24", destination_address_prefix = "VirtualNetwork" },
+    { name = "deny-all-inbound", priority = 4096, direction = "Inbound", access = "Deny", protocol = "*", source_port_range = "*", destination_port_range = "*", source_address_prefix = "*", destination_address_prefix = "*" },
   ]
   tags = var.tags
 }
@@ -234,8 +234,8 @@ module "nsg_data_eastus" {
   location            = data.azurerm_resource_group.network_eastus.location
   subnet_id           = data.azurerm_subnet.data_eus.id
   security_rules = [
-    { name = "allow-backend-sql", priority = 100,  direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "1433", source_address_prefix = "10.3.2.0/24", destination_address_prefix = "VirtualNetwork" },
-    { name = "deny-all-inbound",  priority = 4096, direction = "Inbound", access = "Deny",  protocol = "*",   source_port_range = "*", destination_port_range = "*",    source_address_prefix = "*",           destination_address_prefix = "*" },
+    { name = "allow-backend-sql", priority = 100, direction = "Inbound", access = "Allow", protocol = "Tcp", source_port_range = "*", destination_port_range = "1433", source_address_prefix = "10.3.2.0/24", destination_address_prefix = "VirtualNetwork" },
+    { name = "deny-all-inbound", priority = 4096, direction = "Inbound", access = "Deny", protocol = "*", source_port_range = "*", destination_port_range = "*", source_address_prefix = "*", destination_address_prefix = "*" },
   ]
   tags = var.tags
 }

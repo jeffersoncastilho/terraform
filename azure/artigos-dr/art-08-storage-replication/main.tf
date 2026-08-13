@@ -28,13 +28,13 @@ data "azurerm_private_dns_zone" "blob" {
 # ── Storage Account Primary (Brazil South — RAGZRS) ────────────────────────────
 
 module "storage_primary" {
-  source              = "../../terraform-storage-modules"
-  name                = "stblogcastilhobrazil"
-  resource_group_name = data.azurerm_resource_group.workload_brazilsouth.name
-  location            = data.azurerm_resource_group.workload_brazilsouth.location
-  replication_type    = var.primary_replication_type
+  source                        = "../../terraform-storage-modules"
+  name                          = "stblogcastilhobrazil"
+  resource_group_name           = data.azurerm_resource_group.workload_brazilsouth.name
+  location                      = data.azurerm_resource_group.workload_brazilsouth.location
+  replication_type              = var.primary_replication_type
   public_network_access_enabled = false
-  containers          = ["data", "backups", "asr-cache"]
+  containers                    = ["data", "backups", "asr-cache"]
   private_endpoints = [
     {
       name                 = "pep-blob-st-blog-castilho-brazilsouth"

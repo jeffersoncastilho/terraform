@@ -23,11 +23,11 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   network_profile {
-    network_plugin    = "azure"
-    network_policy    = "azure"
-    outbound_type     = "userDefinedRouting"
-    service_cidr      = var.service_cidr
-    dns_service_ip    = var.dns_service_ip
+    network_plugin = "azure"
+    network_policy = "azure"
+    outbound_type  = "userDefinedRouting"
+    service_cidr   = var.service_cidr
+    dns_service_ip = var.dns_service_ip
   }
 
   oidc_issuer_enabled       = true

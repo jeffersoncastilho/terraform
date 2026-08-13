@@ -1,0 +1,42 @@
+# Terraform local state (usar remote state — nunca commitar)
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Diretórios de trabalho do Terraform
+**/.terraform/*
+**/.terraform.lock.hcl
+
+# Variáveis sensíveis (subscription_id, secrets, keys)
+*.tfvars
+!example.tfvars
+
+# Backend config (contém storage account — nunca commitar)
+backend.hcl
+backend.conf
+
+# Logs e crashes
+crash.log
+*.log
+
+# Outputs gerados após apply (contém valores reais de infra)
+outputs.json
+
+# Overrides locais
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# CLI config
+.terraformrc
+terraform.rc
+
+# Logs de deploy
+.deploy-logs/
+
+# Azure CLI cache
+.az/
+
+# MCP server (não publicar)
+mcp-server/

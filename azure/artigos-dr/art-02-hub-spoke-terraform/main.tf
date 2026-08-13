@@ -50,10 +50,10 @@ module "vnet_hub_brazilsouth" {
   address_space       = ["10.0.0.0/16"]
 
   subnets = [
-    { key = "firewall",   name = "AzureFirewallSubnet", address_prefixes = ["10.0.0.0/26"] },
-    { key = "gateway",    name = "GatewaySubnet",       address_prefixes = ["10.0.0.64/27"] },
-    { key = "bastion",    name = "AzureBastionSubnet",  address_prefixes = ["10.0.0.128/26"] },
-    { key = "management", name = "snet-management",     address_prefixes = ["10.0.0.192/27"] },
+    { key = "firewall", name = "AzureFirewallSubnet", address_prefixes = ["10.0.0.0/26"] },
+    { key = "gateway", name = "GatewaySubnet", address_prefixes = ["10.0.0.64/27"] },
+    { key = "bastion", name = "AzureBastionSubnet", address_prefixes = ["10.0.0.128/26"] },
+    { key = "management", name = "snet-management", address_prefixes = ["10.0.0.192/27"] },
   ]
 
   tags       = var.tags
@@ -70,10 +70,10 @@ module "vnet_hub_eastus" {
   address_space       = ["10.1.0.0/16"]
 
   subnets = [
-    { key = "firewall",   name = "AzureFirewallSubnet", address_prefixes = ["10.1.0.0/26"] },
-    { key = "gateway",    name = "GatewaySubnet",       address_prefixes = ["10.1.0.64/27"] },
-    { key = "bastion",    name = "AzureBastionSubnet",  address_prefixes = ["10.1.0.128/26"] },
-    { key = "management", name = "snet-management",     address_prefixes = ["10.1.0.192/27"] },
+    { key = "firewall", name = "AzureFirewallSubnet", address_prefixes = ["10.1.0.0/26"] },
+    { key = "gateway", name = "GatewaySubnet", address_prefixes = ["10.1.0.64/27"] },
+    { key = "bastion", name = "AzureBastionSubnet", address_prefixes = ["10.1.0.128/26"] },
+    { key = "management", name = "snet-management", address_prefixes = ["10.1.0.192/27"] },
   ]
 
   tags       = var.tags
@@ -91,9 +91,9 @@ module "vnet_spoke_brazilsouth" {
 
   subnets = [
     { key = "frontend", name = "snet-frontend", address_prefixes = ["10.2.1.0/24"] },
-    { key = "backend",  name = "snet-backend",  address_prefixes = ["10.2.2.0/24"] },
-    { key = "data",     name = "snet-data",     address_prefixes = ["10.2.3.0/24"] },
-    { key = "aks",      name = "snet-aks",      address_prefixes = ["10.2.4.0/22"] },
+    { key = "backend", name = "snet-backend", address_prefixes = ["10.2.2.0/24"] },
+    { key = "data", name = "snet-data", address_prefixes = ["10.2.3.0/24"] },
+    { key = "aks", name = "snet-aks", address_prefixes = ["10.2.4.0/22"] },
   ]
 
   tags       = var.tags
@@ -111,9 +111,9 @@ module "vnet_spoke_eastus" {
 
   subnets = [
     { key = "frontend", name = "snet-frontend", address_prefixes = ["10.3.1.0/24"] },
-    { key = "backend",  name = "snet-backend",  address_prefixes = ["10.3.2.0/24"] },
-    { key = "data",     name = "snet-data",     address_prefixes = ["10.3.3.0/24"] },
-    { key = "aks",      name = "snet-aks",      address_prefixes = ["10.3.4.0/22"] },
+    { key = "backend", name = "snet-backend", address_prefixes = ["10.3.2.0/24"] },
+    { key = "data", name = "snet-data", address_prefixes = ["10.3.3.0/24"] },
+    { key = "aks", name = "snet-aks", address_prefixes = ["10.3.4.0/22"] },
   ]
 
   tags       = var.tags

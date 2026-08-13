@@ -15,3 +15,6 @@ outputs.json
 outputs.tf.json
 .env
 *.env
+
+# Claude Code (config local, não deve ir para o repo)
+.claude/

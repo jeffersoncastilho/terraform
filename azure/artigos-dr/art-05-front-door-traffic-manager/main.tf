@@ -17,15 +17,15 @@ data "azurerm_public_ip" "firewall_eastus" {
 # ── Azure Front Door ──────────────────────────────────────────────────────────
 
 module "front_door" {
-  source              = "../../terraform-front-door-modules"
-  name                = "afd-blog-castilho"
-  resource_group_name = data.azurerm_resource_group.network_brazilsouth.name
-  sku                 = "Premium_AzureFrontDoor"
-  waf_policy_name     = "wafblogcastilho"
-  waf_mode            = var.waf_mode
-  endpoint_name       = "ep-blog-castilho"
-  origin_group_name   = "og-blog-castilho"
-  route_name          = "route-blog-castilho"
+  source               = "../../terraform-front-door-modules"
+  name                 = "afd-blog-castilho"
+  resource_group_name  = data.azurerm_resource_group.network_brazilsouth.name
+  sku                  = "Premium_AzureFrontDoor"
+  waf_policy_name      = "wafblogcastilho"
+  waf_mode             = var.waf_mode
+  endpoint_name        = "ep-blog-castilho"
+  origin_group_name    = "og-blog-castilho"
+  route_name           = "route-blog-castilho"
   security_policy_name = "secpolicy-blog-castilho"
   origins = [
     {
