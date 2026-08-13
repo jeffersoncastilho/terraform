@@ -48,6 +48,12 @@ variable "network_acls_default_action" {
   default     = "Allow"
 }
 
+variable "enable_rbac_authorization" {
+  description = "Usa RBAC do Azure AD para autorização (true) em vez de Access Policies (false)."
+  type        = bool
+  default     = false
+}
+
 variable "tags" {
   description = "Tags aplicadas ao Key Vault."
   type        = map(string)
