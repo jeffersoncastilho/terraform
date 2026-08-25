@@ -63,3 +63,9 @@ variable "time_frame" {
   description = "Intervalo de tempo coberto por cada execução (MonthToDate, BillingMonthToDate, TheLastMonth, TheLastBillingMonth, WeekToDate)"
   default     = "MonthToDate"
 }
+
+variable "tags" {
+  type        = map(string)
+  description = "Tags aplicadas nos recursos que suportam tags (resource group e storage account — o export em si não suporta tags no provider azurerm)"
+  default     = {}
+}

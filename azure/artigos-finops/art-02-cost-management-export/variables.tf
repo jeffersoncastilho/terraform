@@ -31,3 +31,9 @@ variable "end_date" {
   type        = string
   description = "Fim do período do export, em RFC3339"
 }
+
+variable "tags" {
+  type        = map(string)
+  description = "Tags aplicadas nos recursos que suportam tags"
+  default     = { CostCenter = "finops-blog-castilho" }
+}

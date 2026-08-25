@@ -26,4 +26,5 @@ module "cost_export" {
   recurrence_type       = var.recurrence_type
   start_date            = var.start_date
   end_date              = var.end_date
+  tags                  = var.tags
 }
