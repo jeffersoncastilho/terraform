@@ -1,89 +1,75 @@
-# Repositório de Códigos para AWS
 <div align="center">
   <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Terraform_Logo.svg" alt="Terraform Logo" width="80"/>
   <span style="margin: 0 20px;">+</span>
   <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg" alt="AWS Logo" width="80"/>
 
-<p align="center">
-  <img src="https://jeffersoncastilho.com.br/wp-content/uploads/2026/01/aws-logo.png" alt="AWS Logo" width="600">
-  <br>
-  <br>
-  <em>Scripts, automações e templates de infraestrutura como código para o ecossistema AWS.</em>
-</p>
   # AWS Terraform Repository
 
-<!-- 
-  IMPORTANTE: Para os badges funcionarem, substitua 'SEU_USUARIO/SEU_REPOSITORIO' pelo caminho do seu repositório no GitHub.
-  Exemplo: 'microsoft/vscode'
--->
-<p align="center">
-  <img src="https://img.shields.io/github/last-commit/SEU_USUARIO/SEU_REPOSITORIO?style=for-the-badge&logo=github&label=Último%20Commit" alt="Último Commit">
-  <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="Licença MIT">
-</p>
   <p>
     <b>Reusable Terraform modules and usage examples for Amazon Web Services (AWS).</b>
   </p>
 
-## 🚀 Tecnologias
-  [![Terraform](https://img.shields.io/badge/Terraform-%3E%3D1.0-623CE4?style=flat&logo=terraform)](https://www.terraform.io/)
-  [![AWS](https://img.shields.io/badge/Provider-AWS-232F3E?style=flat&logo=amazon-aws&logoColor=white)](https://registry.terraform.io/providers/hashicorp/aws/latest)
+  [![Terraform](https://img.shields.io/badge/Terraform-%3E%3D1.5-623CE4?style=flat&logo=terraform)](https://www.terraform.io/)
+  [![AWS](https://img.shields.io/badge/Provider-AWS%20~%3E%206.0-232F3E?style=flat&logo=amazon-aws&logoColor=white)](https://registry.terraform.io/providers/hashicorp/aws/latest)
 </div>
 
-Este repositório contém exemplos e utilitários construídos com as seguintes tecnologias:
 ---
 
-<p align="center">
-  <a href="https://aws.amazon.com/"><img src="https://img.shields.io/badge/AWS-%23232F3E.svg?style=for-the-badge&logo=amazon-aws&logoColor=white" alt="AWS"></a>
-  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"></a>
-  <a href="https://www.gnu.org/software/bash/"><img src="https://img.shields.io/badge/Shell_Script-%23121011.svg?style=for-the-badge&logo=gnu-bash&logoColor=white" alt="Shell Script"></a>
-</p>
 ## 📂 Project Structure
 
-## 📂 Estrutura
-The repository follows the **Standard Module Structure**, organizing resources by AWS products:
-
-O conteúdo está organizado por tecnologia:
 ```text
-.
-├── modules/                  # 📦 Reusable Terraform modules
-│   ├── aws-vpc/              #    ├── Network: VPC, Subnets, Route Tables, IGW
-│   ├── aws-ec2/              #    ├── Compute: EC2 Instances, Security Groups, ALBs
-│   ├── aws-s3/               #    ├── Storage: S3 Buckets, Policies, Lifecycle Rules
-│   ├── aws-rds/              #    ├── Database: RDS Instances, Parameter Groups
-│   ├── aws-eks/              #    ├── Containers: EKS Cluster, Node Groups
-│   └── aws-lambda/           #    └── Serverless: Lambda Functions, Layers
-├── examples/                 # 🚀 Example implementations / Consumers
-│   ├── vpc-standard/         #    ├── Standard VPC architecture
-│   ├── web-cluster/          #    ├── HA Web Server Cluster (EC2 + ALB + ASG)
-│   ├── serverless-api/       #    ├── API Gateway + Lambda + DynamoDB
-│   └── eks-cluster/          #    └── Managed Kubernetes Cluster
+aws/
+├── terraform-vpc-modules/                     # Módulo: VPC, subnets públicas/privadas, NAT Gateway
+├── terraform-eks-modules/                     # Módulo: control plane do EKS (Access Entries, OIDC opcional)
+├── terraform-eks-node-group-modules/          # Módulo: Managed Node Groups (On-Demand ou Spot)
+├── terraform-eks-access-entry-modules/        # Módulo: Access Entries + access policies
+├── terraform-eks-pod-identity-modules/        # Módulo: IAM role para pods via EKS Pod Identity
+├── terraform-eks-addon-modules/               # Módulo: add-ons gerenciados do EKS
+├── terraform-eks-lb-controller-modules/       # Módulo: AWS Load Balancer Controller (Helm + Pod Identity)
+├── terraform-eks-karpenter-modules/           # Módulo: Karpenter (IAM, fila de interrupção, Helm)
+├── artigos-eks/                               # Série: Amazon EKS com Terraform
+│   ├── eks-01-cluster-terraform/
+│   ├── eks-02-managed-node-groups/
+│   ├── eks-03-access-entries/
+│   └── ...
 └── README.md
 ```
 
--   **`/python`**: Scripts em Python para automação de tarefas na AWS com Boto3.
--   **`/shell`**: Scripts de linha de comando para automações e tarefas de administração.
-## 🔄 Workflow
+## Módulos
 
-## Como Usar
-1.  **Modules (`modules/`)**:
-    Develop reusable logic in the `modules/` directory. Each module should be self-contained.
+| Módulo | Descrição |
+|--------|-----------|
+| [`terraform-vpc-modules`](terraform-vpc-modules/) | VPC em N AZs com subnets públicas e privadas já marcadas para load balancers do EKS |
+| [`terraform-eks-modules`](terraform-eks-modules/) | Control plane do EKS com autenticação por Access Entries, endpoint restrito e política de upgrade |
+| [`terraform-eks-node-group-modules`](terraform-eks-node-group-modules/) | Managed Node Group On-Demand ou Spot, com labels, taints e Session Manager |
+| [`terraform-eks-access-entry-modules`](terraform-eks-access-entry-modules/) | Access Entries com access policies por cluster ou por namespace |
+| [`terraform-eks-pod-identity-modules`](terraform-eks-pod-identity-modules/) | IAM role para pods com EKS Pod Identity, sem provedor OIDC |
+| [`terraform-eks-addon-modules`](terraform-eks-addon-modules/) | Add-ons gerenciados com versão compatível e associação de Pod Identity |
+| [`terraform-eks-lb-controller-modules`](terraform-eks-lb-controller-modules/) | AWS Load Balancer Controller via Helm, com IAM policy oficial e Pod Identity |
+| [`terraform-eks-karpenter-modules`](terraform-eks-karpenter-modules/) | Karpenter: roles, fila SQS de interrupção, regras do EventBridge e Helm |
 
-Cada diretório conterá seu próprio `README.md` com instruções específicas sobre como utilizar os códigos e scripts contidos nele. Sinta-se à vontade para explorar as pastas.
-2.  **Examples (`examples/`)**:
-    Create scenarios in `examples/` that call the modules using `source = "../../modules/<module-name>"`.
+## Artigos — Série Amazon EKS com Terraform
 
-## 📜 Versionamento e Changelog
-## 🚀 Usage
+O diretório [`artigos-eks/`](artigos-eks/) contém o código Terraform da série **Amazon EKS com Terraform**, publicada em [jeffersoncastilho.com.br](https://jeffersoncastilho.com.br).
 
-As mudanças e novas funcionalidades neste projeto serão documentadas no arquivo `CHANGELOG.md`.
-To run an example:
+| Artigo | Pasta | Link |
+|--------|-------|------|
+| EKS 01 — Cluster EKS com Terraform do zero | [`eks-01-cluster-terraform/`](artigos-eks/eks-01-cluster-terraform/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/01/20/cluster-eks/) |
+| EKS 02 — Managed Node Groups On-Demand e Spot | [`eks-02-managed-node-groups/`](artigos-eks/eks-02-managed-node-groups/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/02/24/eks-managed-node-groups/) |
+| EKS 03 — EKS Access Entries: o fim do aws-auth | [`eks-03-access-entries/`](artigos-eks/eks-03-access-entries/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/03/17/eks-access-entries/) |
+| EKS 04 — IAM para pods com EKS Pod Identity | [`eks-04-pod-identity/`](artigos-eks/eks-04-pod-identity/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/04/14/eks-pod-identity/) |
+| EKS 05 — Add-ons do EKS e EBS CSI com gp3 | [`eks-05-addons-ebs-csi/`](artigos-eks/eks-05-addons-ebs-csi/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/05/19/eks-add-ons/) |
+| EKS 06 — AWS Load Balancer Controller no EKS | [`eks-06-load-balancer-controller/`](artigos-eks/eks-06-load-balancer-controller/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/06/23/aws-load-balancer-controller/) |
+| EKS 07 — Karpenter no EKS com Spot | [`eks-07-karpenter/`](artigos-eks/eks-07-karpenter/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/07/14/karpenter-eks/) |
+| EKS 08 — Container Insights no EKS | [`eks-08-container-insights/`](artigos-eks/eks-08-container-insights/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/08/18/eks-container-insights/) |
+| EKS 09 — Upgrade do EKS sem downtime | [`eks-09-upgrade/`](artigos-eks/eks-09-upgrade/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/09/15/upgrade-eks/) |
 
-## 🤝 Contribuições
+## Uso rápido
 
-Contribuições são muito bem-vindas! Sinta-se à vontade para abrir uma *issue* para relatar um problema ou enviar um *pull request* com melhorias.
 ```bash
-cd examples/vpc-standard
+cd artigos-eks/eks-01-cluster-terraform/
 terraform init
-terraform plan
-terraform apply
+terraform plan -var 'public_access_cidrs=["SEU_IP/32"]'
 ```
+
+Os ambientes usam o perfil padrão do AWS CLI (`aws sso login` ou credenciais temporárias). Nunca versione access keys nem arquivos `.tfvars` com dados da conta.
