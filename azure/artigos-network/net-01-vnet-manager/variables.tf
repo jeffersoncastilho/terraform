@@ -10,12 +10,6 @@ variable "location" {
   default     = "eastus"
 }
 
-variable "resource_group_name" {
-  type        = string
-  description = "Resource Group que concentra VNets e o Network Manager"
-  default     = "rg-blog-castilho-vnet-manager"
-}
-
 variable "vnets" {
   description = "VNets de exemplo gerenciadas pelo Network Manager (simulam times/apps distintos)"
   type = map(object({
