@@ -1,130 +1,81 @@
 # Azure Virtual Network Manager: topologia (mesh) e regra de segurança admin
 # centralizadas sobre 3 VNets de exemplo (frontend / backend / shared).
 # Série: artigos-network | Artigo: net-01-vnet-manager
+#
+# Refatorado para consumir módulos reutilizáveis em vez de recursos crus:
+# terraform-resource-group-modules, terraform-virtual-network-modules (uma
+# instância por VNet via for_each no bloco module) e o novo
+# terraform-network-manager-modules, que encapsula Network Manager + grupo +
+# membros estáticos + connectivity configuration + security admin
+# configuration + regras + deployments.
 
-resource "azurerm_resource_group" "network_manager" {
-  name     = var.resource_group_name
-  location = var.location
-  tags     = var.tags
-}
+module "rg" {
+  source = "../../terraform-resource-group-modules"
 
-# ── VNets de exemplo ("times/apps" que o Network Manager vai governar) ────────
-
-resource "azurerm_virtual_network" "this" {
-  for_each = var.vnets
-
-  name                = "vnet-${each.key}-blog-castilho"
-  resource_group_name = azurerm_resource_group.network_manager.name
-  location            = azurerm_resource_group.network_manager.location
-  address_space       = [each.value.address_space]
-  tags                = var.tags
-}
-
-resource "azurerm_subnet" "this" {
-  for_each = var.vnets
-
-  name                 = "snet-${each.key}"
-  resource_group_name  = azurerm_resource_group.network_manager.name
-  virtual_network_name = azurerm_virtual_network.this[each.key].name
-  address_prefixes     = [each.value.subnet_prefix]
-}
-
-# ── Azure Virtual Network Manager ──────────────────────────────────────────────
-
-resource "azurerm_network_manager" "this" {
-  name                = "avnm-blog-castilho"
-  location            = azurerm_resource_group.network_manager.location
-  resource_group_name = azurerm_resource_group.network_manager.name
-  scope_accesses      = ["Connectivity", "SecurityAdmin"]
-
-  scope {
-    subscription_ids = ["/subscriptions/${var.subscription_id}"]
-  }
+  resource_type = "rg"
+  project_name  = "blog-castilho-vnet-manager"
+  environment   = "prod"
+  location      = var.location
 
   tags = var.tags
 }
 
-# Grupo de rede: as 3 VNets de exemplo, associadas como membros estáticos
-resource "azurerm_network_manager_network_group" "app_vnets" {
-  name               = "ng-app-vnets"
-  network_manager_id = azurerm_network_manager.this.id
-}
+# ── VNets de exemplo ("times/apps" que o Network Manager vai governar) ────────
 
-resource "azurerm_network_manager_static_member" "app_vnets" {
+module "vnets" {
+  source   = "../../terraform-virtual-network-modules"
   for_each = var.vnets
 
-  name                      = "member-${each.key}"
-  network_group_id         = azurerm_network_manager_network_group.app_vnets.id
-  target_virtual_network_id = azurerm_virtual_network.this[each.key].id
+  name                = "vnet-${each.key}-blog-castilho"
+  resource_group_name = module.rg.name
+  location             = var.location
+  address_space        = [each.value.address_space]
+
+  subnets = [
+    { key = "default", name = "snet-${each.key}", address_prefixes = [each.value.subnet_prefix] },
+  ]
+
+  tags = var.tags
 }
 
-# ── Connectivity Configuration: topologia mesh entre as 3 VNets ──────────────
-# O Network Manager cria e mantém o peering entre todas elas automaticamente —
-# sem precisar declarar azurerm_virtual_network_peering para cada par.
+# ── Azure Virtual Network Manager: grupo, topologia mesh e baseline de segurança
+# O Network Manager cria e mantém o peering entre as VNets do grupo
+# automaticamente — sem precisar declarar azurerm_virtual_network_peering
+# para cada par. A regra de segurança se aplica a TODAS as VNets do grupo,
+# com prioridade acima de qualquer NSG local — bloqueia RDP/SSH vindos da
+# Internet mesmo que alguém esqueça de configurar o NSG numa VNet nova.
 
-resource "azurerm_network_manager_connectivity_configuration" "mesh" {
-  name                  = "conn-mesh-app-vnets"
-  network_manager_id   = azurerm_network_manager.this.id
-  connectivity_topology = "Mesh"
+module "network_manager" {
+  source = "../../terraform-network-manager-modules"
 
-  applies_to_group {
-    group_connectivity  = "None"
-    network_group_id   = azurerm_network_manager_network_group.app_vnets.id
-  }
-}
+  name                 = "avnm-blog-castilho"
+  resource_group_name = module.rg.name
+  location             = var.location
+  subscription_id      = var.subscription_id
+  network_group_name   = "ng-app-vnets"
 
-# ── Security Admin Configuration: regra que se aplica a TODAS as VNets do
-# grupo, com prioridade acima de qualquer NSG local — bloqueia RDP/SSH vindos
-# da Internet mesmo que alguém esqueça de configurar o NSG numa VNet nova.
+  member_vnet_ids = { for k, v in module.vnets : k => v.vnet_id }
 
-resource "azurerm_network_manager_security_admin_configuration" "baseline" {
-  name                = "secadmin-baseline"
-  network_manager_id = azurerm_network_manager.this.id
-}
+  connectivity_topology            = "Mesh"
+  connectivity_configuration_name  = "conn-mesh-app-vnets"
+  security_admin_configuration_name = "secadmin-baseline"
+  admin_rule_collection_name        = "rulecoll-baseline"
 
-resource "azurerm_network_manager_admin_rule_collection" "baseline" {
-  name                            = "rulecoll-baseline"
-  security_admin_configuration_id = azurerm_network_manager_security_admin_configuration.baseline.id
-  network_group_ids               = [azurerm_network_manager_network_group.app_vnets.id]
-}
+  admin_rules = [
+    {
+      name                             = "deny-rdp-ssh-from-internet"
+      action                           = "Deny"
+      direction                        = "Inbound"
+      priority                         = 100
+      protocol                         = "Tcp"
+      source_address_prefix_type       = "ServiceTag"
+      source_address_prefix           = "Internet"
+      destination_address_prefix_type = "IPPrefix"
+      destination_address_prefix      = "*"
+      source_port_ranges               = ["0-65535"]
+      destination_port_ranges          = ["22", "3389"]
+    },
+  ]
 
-resource "azurerm_network_manager_admin_rule" "deny_rdp_ssh_internet" {
-  name                     = "deny-rdp-ssh-from-internet"
-  admin_rule_collection_id = azurerm_network_manager_admin_rule_collection.baseline.id
-  action                   = "Deny"
-  direction                = "Inbound"
-  priority                 = 100
-
-  protocol = "Tcp"
-
-  source {
-    address_prefix_type = "ServiceTag"
-    address_prefix      = "Internet"
-  }
-
-  destination {
-    address_prefix_type = "IPPrefix"
-    address_prefix      = "*"
-  }
-
-  source_port_ranges      = ["0-65535"]
-  destination_port_ranges = ["22", "3389"]
-}
-
-# ── Deployment: aplica as duas configurações na região ────────────────────────
-
-resource "azurerm_network_manager_deployment" "connectivity" {
-  network_manager_id = azurerm_network_manager.this.id
-  location            = azurerm_resource_group.network_manager.location
-  scope_access        = "Connectivity"
-  configuration_ids   = [azurerm_network_manager_connectivity_configuration.mesh.id]
-}
-
-resource "azurerm_network_manager_deployment" "security_admin" {
-  network_manager_id = azurerm_network_manager.this.id
-  location            = azurerm_resource_group.network_manager.location
-  scope_access        = "SecurityAdmin"
-  configuration_ids   = [azurerm_network_manager_security_admin_configuration.baseline.id]
-
-  depends_on = [azurerm_network_manager_admin_rule.deny_rdp_ssh_internet]
+  tags = var.tags
 }
