@@ -4,12 +4,15 @@ resource "azurerm_container_group" "this" {
   resource_group_name = var.resource_group_name
   os_type             = "Linux"
   restart_policy      = var.restart_policy
+  ip_address_type     = var.ip_address_type
+  subnet_ids          = length(var.subnet_ids) > 0 ? var.subnet_ids : null
 
   container {
-    name   = var.container_name
-    image  = var.image
-    cpu    = var.cpu
-    memory = var.memory
+    name     = var.container_name
+    image    = var.image
+    cpu      = var.cpu
+    memory   = var.memory
+    commands = var.commands
 
     dynamic "ports" {
       for_each = var.ports

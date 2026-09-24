@@ -55,6 +55,24 @@ variable "ports" {
   default = []
 }
 
+variable "ip_address_type" {
+  description = "Public (padrão), Private (requer subnet_ids) ou None"
+  type        = string
+  default     = "Public"
+}
+
+variable "subnet_ids" {
+  description = "IDs das subnets para integração de VNet (ip_address_type = Private) — vazio (padrão) não integra a nenhuma VNet"
+  type        = list(string)
+  default     = []
+}
+
+variable "commands" {
+  description = "Override do comando de entrada do container (ex: [\"curl\", \"-s\", \"https://exemplo.com\"]) — null (padrão) usa o entrypoint da imagem"
+  type        = list(string)
+  default     = null
+}
+
 variable "environment_variables" {
   description = "Variáveis de ambiente não-sensíveis"
   type        = map(string)
