@@ -12,11 +12,10 @@
 # IPsec continuam como recursos diretos aqui — são específicos de S2S, não
 # fazem parte do módulo genérico de VPN Gateway.
 #
-# NÃO APLICADO nesta sessão: VPN Gateway leva 30-45min pra provisionar e
-# ExpressRoute Circuit gera custo mensal mesmo sem circuito físico conectado
-# por um provedor — ambos exigem decisão de custo/tempo em tempo real, que
-# não faz sentido tomar sem o usuário acompanhando. Código validado
-# (terraform validate + plan), pronto pra aplicar quando for a hora certa.
+# Aplicado no lab do artigo e destruído no mesmo dia: o VPN Gateway levou
+# ~33min pra provisionar e o ExpressRoute Circuit gera custo mensal mesmo sem
+# circuito físico conectado por um provedor. Rode `terraform destroy` assim
+# que terminar de testar.
 
 module "rg" {
   source = "../../terraform-resource-group-modules"
