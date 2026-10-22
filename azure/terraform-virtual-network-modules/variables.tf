@@ -21,13 +21,13 @@ variable "address_space" {
 variable "subnets" {
   description = "Lista de subnets a criar na VNet"
   type = list(object({
-    key                                            = string
-    name                                           = string
-    address_prefixes                               = list(string)
-    private_endpoint_network_policies              = optional(string)
-    private_link_service_network_policies_enabled  = optional(bool)
+    key                                           = string
+    name                                          = string
+    address_prefixes                              = list(string)
+    private_endpoint_network_policies             = optional(string)
+    private_link_service_network_policies_enabled = optional(bool)
     delegation = optional(object({
-      name                        = string
+      name                       = string
       service_delegation_name    = string
       service_delegation_actions = list(string)
     }))
