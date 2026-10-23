@@ -63,6 +63,7 @@ O diretório [`artigos-eks/`](artigos-eks/) contém o código Terraform da séri
 | EKS 07 — Karpenter no EKS com Spot | [`eks-07-karpenter/`](artigos-eks/eks-07-karpenter/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/07/14/karpenter-eks/) |
 | EKS 08 — Container Insights no EKS | [`eks-08-container-insights/`](artigos-eks/eks-08-container-insights/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/08/18/eks-container-insights/) |
 | EKS 09 — Upgrade do EKS sem downtime | [`eks-09-upgrade/`](artigos-eks/eks-09-upgrade/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/09/15/upgrade-eks/) |
+| EKS 10 — Gateway API no EKS com ALB | [`eks-10-gateway-api/`](artigos-eks/eks-10-gateway-api/) | [Ler artigo](https://jeffersoncastilho.com.br/2026/10/23/gateway-api-eks/) |
 
 ## Uso rápido
 
