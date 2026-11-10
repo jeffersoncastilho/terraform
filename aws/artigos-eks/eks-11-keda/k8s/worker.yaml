@@ -1,0 +1,64 @@
+# Consumidor de exemplo: lê uma mensagem por vez, "processa" (sleep) e apaga.
+# As credenciais vêm do Pod Identity (jobs/worker → JobsWorker-<cluster>).
+# Aplicar com: envsubst '$QUEUE_URL $AWS_REGION' < k8s/worker.yaml | kubectl apply -f -
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: jobs
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: worker
+  namespace: jobs
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  namespace: jobs
+spec:
+  replicas: 0 # quem decide é o KEDA
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      serviceAccountName: worker
+      # só nos nós do Karpenter: o node group system fica para os controllers
+      nodeSelector:
+        karpenter.sh/nodepool: default
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: worker
+          image: public.ecr.aws/aws-cli/aws-cli:2.38.6
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              while true; do
+                MSG=$(aws sqs receive-message --queue-url "$QUEUE_URL" \
+                  --max-number-of-messages 1 --wait-time-seconds 20 \
+                  --query 'Messages[0].[ReceiptHandle,Body]' --output text)
+                if [ -n "$MSG" ] && [ "$MSG" != "None" ]; then
+                  HANDLE=$(echo "$MSG" | cut -f1)
+                  sleep "$WORK_SECONDS" # simula o processamento
+                  aws sqs delete-message --queue-url "$QUEUE_URL" --receipt-handle "$HANDLE"
+                  echo "processada: $(echo "$MSG" | cut -f2)"
+                fi
+              done
+          env:
+            - name: QUEUE_URL
+              value: ${QUEUE_URL}
+            - name: AWS_REGION
+              value: ${AWS_REGION}
+            - name: WORK_SECONDS
+              value: "5"
+          resources:
+            requests:
+              cpu: 500m
+              memory: 128Mi
+            limits:
+              memory: 256Mi

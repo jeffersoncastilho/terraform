@@ -1,0 +1,34 @@
+# TriggerAuthentication + ScaledObject do consumidor.
+# provider aws sem roleArn: o KEDA usa as credenciais do próprio operator
+# (Pod Identity keda/keda-operator → KedaOperator-<cluster>).
+# Aplicar com: envsubst '$QUEUE_URL $AWS_REGION' < k8s/keda.yaml | kubectl apply -f -
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: aws-pod-identity
+  namespace: jobs
+spec:
+  podIdentity:
+    provider: aws
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: worker
+  namespace: jobs
+spec:
+  scaleTargetRef:
+    name: worker
+  minReplicaCount: 0   # fila vazia = nenhum pod
+  maxReplicaCount: 20
+  pollingInterval: 15  # segundos entre leituras da fila
+  cooldownPeriod: 120  # espera depois da última mensagem antes de ir a zero
+  triggers:
+    - type: aws-sqs-queue
+      authenticationRef:
+        name: aws-pod-identity
+      metadata:
+        queueURL: ${QUEUE_URL}
+        queueLength: "10"        # mensagens por pod
+        activationQueueLength: "0"
+        awsRegion: ${AWS_REGION}
